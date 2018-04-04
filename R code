@@ -1,0 +1,74 @@
+## Set your working directory
+setwd("C:/Users/mkhalid/Desktop")
+
+## See what is in your directory
+dir()
+
+
+## Read in your matrix file
+dat1 = read.csv("GSE9520_series_matrix.csv")
+
+## Explore the adata
+dim(dat1)
+head(dat1)
+tail(dat1)
+names(dat1)
+
+## Summary table of your data
+summary(dat1)
+
+
+## Additional ways to look at max and min
+max(dat1$hMSC_Donor220R_Passage2_Day2)
+min(dat1$hMSC_Donor220R_Passage2_Day2)
+
+
+##plotting
+hist(dat1$hMSC_Donor220R_Passage2_Day2, breaks =1000, xlim = c(0,10000))
+hist(dat1$hMSC_Donor220R_Passage2_Day2, breaks =1000, xlim = c(0,10000), xlab="hMSC Donor 220 R P2D2", main="Histogram of hMSC P2D2", col="green")
+
+
+
+
+plot(dat1$hMSC_Donor220R_Passage2_Day2, dat1$hMSC_Donor220R_Passage2_Day7)
+
+##Matrix manipulation
+dat2 = subset(dat1, dat1$hMSC_Donor220R_Passage2_Day2 > 200000)
+
+## Plotting
+library(lattice)
+
+splom(dat2[-c(1)])
+
+boxplot(dat1[-c(1)])
+
+par(mar=c(15,5,1,1))
+boxplot(log(dat1[-c(1)],10), las=2)
+
+##Plotting
+library(beeswarm)
+
+ boxplot(log(dat2[-c(1)],10),  
+    outline = FALSE,     
+    main = 'boxplot + beeswarm')
+  beeswarm(log(dat2[-c(1)],10),
+    col = 4, pch = 16, add = TRUE)
+
+
+
+factorx <- factor(cut(dat1$hMSC_Donor220R_Passage2_Day2, breaks=1000))
+as.matrix(table(factorx))
+
+##Matrix manipulation
+names(dat1)
+dat1$sum_p2d2 <- dat1$hMSC_Donor220R_Passage2_Day2 + dat1$hMSC_Donor240L_Passage2_Day2 + dat1$hMSC_Donor5064L_Passage2_Day2
+dat1$sum_p2d7 <- dat1$hMSC_Donor220R_Passage2_Day7 + dat1$hMSC_Donor240L_Passage2_Day7 + dat1$hMSC_Donor5064L_Passage2_Day7
+head(dat1)
+
+##XY Scatterplot
+plot((dat1$sum_p2d2)/3, (dat1$sum_p2d7)/3)
+plot((dat1$sum_p2d2)/3, (dat1$sum_p2d7)/3, pch=19)
+plot((dat1$sum_p2d2)/3, (dat1$sum_p2d7)/3, pch=19, col="blue")
+plot((dat1$sum_p2d2)/3, (dat1$sum_p2d7)/3, pch=19, col="blue", cex=0.5)
+plot((dat1$sum_p2d2)/3, (dat1$sum_p2d7)/3, pch=19, col="blue", cex=0.5, xlab="Day2 Passage Average",ylab="Day7 Passage Average")
+abline(a=0,b=1, col="red", lty=2)
